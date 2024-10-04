@@ -38,13 +38,16 @@ class HealthDataProcessor:
 
         # Combine the flattened data and ensure both workouts and metrics exist
         if workout_data.empty:
-            workout_data = pd.DataFrame(columns=['health_data_user', 'type', 'date', 'source', 'workout_qty', 'workout_units', 'elevation_qty', 'elevation_units', 'location'])
+            workout_data = pd.DataFrame(columns=['health_data_user', 'type', 'date', 'source', 'workout_qty',
+                                                 'workout_units', 'elevation_qty', 'elevation_units', 'location'])
 
         if metrics_data.empty:
-            metrics_data = pd.DataFrame(columns=['health_data_user', 'type', 'date', 'source', 'value', 'units', 'metric_name'])
+            metrics_data = pd.DataFrame(columns=['health_data_user', 'type', 'date', 'source', 'value',
+                                                 'units', 'metric_name'])
 
         combined_df = pd.concat([workout_data, metrics_data], ignore_index=True)
         self.dataframes.append(combined_df)
+
 
     def flatten_workouts(self, data, user_id):
         """ Flatten the workout data from the JSON file """
@@ -64,6 +67,7 @@ class HealthDataProcessor:
                     'location': workout.get('location', None)
                 })
         return pd.DataFrame(flattened_workout_data)
+
 
     def flatten_metrics(self, data, user_id):
         flattened_metrics_data = []
