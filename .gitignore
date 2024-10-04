@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# IDEs
+.idea/
+*.iml
+
+# Python
+__pycache__/
+*.pyc
+
+# Uploads and temporary files
