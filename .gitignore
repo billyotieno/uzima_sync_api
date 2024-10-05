@@ -10,3 +10,7 @@ __pycache__/
 *.pyc
 
 # Uploads and temporary files
+
+# Ignore my .env file
+.env
+config.py
