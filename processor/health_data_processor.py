@@ -8,12 +8,15 @@ class HealthDataProcessor:
         self.input_dir = input_dir
         self.dataframes = []
 
-    def process_files(self):
+    def process_files(self, user_id):
+        """
+        Process each JSON file in the extracted directory and associate with the provided user_id.
+        """
         # Process each JSON file in the extracted directory
         for file_name in os.listdir(self.input_dir):
             if file_name.endswith('.json'):
                 file_path = os.path.join(self.input_dir, file_name)
-                user_id = file_name.split('.')[0]
+                # Use the passed user_id instead of extracting from file name
                 self.process_file(file_path, user_id)
 
         # Combine all dataframes into one

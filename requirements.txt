@@ -3,3 +3,5 @@ pandas
 oracledb
 flask-restful
 python-dotenv
+flask-bcrypt
+flask-httpauth
