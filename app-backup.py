@@ -12,11 +12,13 @@ app.config.from_object(Config)
 
 # Initialize Oracle connection
 def get_db_connection():
-    return connect(user=app.config['ORACLE_USER'],
-                   password=app.config['ORACLE_PASSWORD'],
-                   service_name=app.config['ORACLE_SERVICE_NAME'],
-                   port=1521,
-                   host=app.config['ORACLE_HOST'])
+    return connect(
+        user=os.getenv('ORACLE_USER'),
+        password=os.getenv('ORACLE_PASSWORD'),
+        service_name=os.getenv('ORACLE_SERVICE_NAME'),
+        port=1521,
+        host=os.getenv('ORACLE_HOST')
+    )
 
 
 # Route to handle file upload and process the data

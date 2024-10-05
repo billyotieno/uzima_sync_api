@@ -36,11 +36,11 @@ def get_api_info():
 def get_db_connection():
     try:
         return connect(
-            user=app.config['ORACLE_USER'],
-            password=app.config['ORACLE_PASSWORD'],
-            service_name=app.config['ORACLE_SERVICE_NAME'],
+            user=os.getenv('ORACLE_USER'),
+            password=os.getenv('ORACLE_PASSWORD'),
+            service_name=os.getenv('ORACLE_SERVICE_NAME'),
             port=1521,
-            host=app.config['ORACLE_HOST']
+            host=os.getenv('ORACLE_HOST')
         )
     except Exception as e:
         logging.error(f"Error connecting to Oracle DB: {e}")
