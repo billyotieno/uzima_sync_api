@@ -5,7 +5,8 @@ import zipfile
 import pandas as pd
 
 import numpy as np
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Blueprint
+from flask_restful import Api, Resource
 from oracledb import connect
 
 from config import Config
@@ -15,7 +16,19 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 # Setup logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# Define Blueprint for the API
+api_v1 = Blueprint('api_v1', __name__)
+
+# API version and description route
+@api_v1.route('/', methods=['GET'])
+def get_api_info():
+    return jsonify({
+        'version': 'v1',
+        'description': 'UzimaSync API. Supports data push for health data (ZIP and JSON formats).'
+    }), 200
 
 
 # Initialize Oracle connection
@@ -34,59 +47,72 @@ def get_db_connection():
 
 
 # Route to handle file upload and process the data
-@app.route('/upload', methods=['POST'])
-def upload_files():
-    # Check if the post request has the file part
+# File upload and processing route
+@api_v1.route('/upload', methods=['POST'])
+def upload_files_v1():
     if 'file' not in request.files:
+        logging.error("No file part in the request")
         return jsonify({'error': 'No file part in the request'}), 400
 
     file = request.files['file']
     if file.filename == '':
+        logging.error("No file selected for uploading")
         return jsonify({'error': 'No selected file'}), 400
 
     if not (file.filename.endswith('.zip') or file.filename.endswith('.json')):
+        logging.error("Unsupported file type")
         return jsonify({'error': 'File must be a zip or json'}), 400
 
     try:
+        # Handle ZIP and JSON files separately
         if file.filename.endswith('.zip'):
-            # Extract zip file
-            extract_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'extracted_files')
-            if not os.path.exists(extract_dir):
-                os.makedirs(extract_dir)
-
-            zip_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-            file.save(zip_path)
-
-            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-                zip_ref.extractall(extract_dir)
-
-            # Process the extracted files
-            processor = HealthDataProcessor(extract_dir)
-            combined_df = processor.process_files()
-
-            # Clean up
-            clean_up(zip_path, extract_dir)
+            combined_df = handle_zip_file(file)
         else:
-            # Process the JSON file directly
-            json_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-            file.save(json_path)
+            combined_df = handle_json_file(file)
 
-            processor = HealthDataProcessor(app.config['UPLOAD_FOLDER'])
-            processor.process_file(json_path, os.path.splitext(file.filename)[0])
-            combined_df = pd.concat(processor.dataframes, ignore_index=True)
-
-            # Clean up
-            os.remove(json_path)
-
-        # Store the processed data into the Oracle database
+        # Save processed data to Oracle DB
         save_to_oracle(combined_df)
 
-        return jsonify({'message': 'Files processed and data saved to the database'}), 200
+        return jsonify(
+            {'message': 'Files processed and data saved to the database'}), 200
     except zipfile.BadZipFile:
+        logging.error("Invalid ZIP file provided")
         return jsonify({'error': 'Invalid zip file'}), 400
     except Exception as e:
         logging.error(f"Error processing file: {e}")
         return jsonify({'error': 'Internal server error'}), 500
+
+
+# Handle processing of ZIP files
+def handle_zip_file(file):
+    extract_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'extracted_files')
+    if not os.path.exists(extract_dir):
+        os.makedirs(extract_dir)
+
+    zip_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+    file.save(zip_path)
+
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_dir)
+
+    processor = HealthDataProcessor(extract_dir)
+    combined_df = processor.process_files()
+
+    clean_up(zip_path, extract_dir)
+    return combined_df
+
+
+# Handle processing of JSON files
+def handle_json_file(file):
+    json_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+    file.save(json_path)
+
+    processor = HealthDataProcessor(app.config['UPLOAD_FOLDER'])
+    processor.process_file(json_path, os.path.splitext(file.filename)[0])
+    combined_df = pd.concat(processor.dataframes, ignore_index=True)
+
+    os.remove(json_path)
+    return combined_df
 
 
 # Save data to Oracle database
@@ -149,16 +175,19 @@ def save_to_oracle(df):
             connection.close()
 
 
-# Utility function to clean up files and directories
+# Utility function for cleanup
 def clean_up(zip_path, extract_dir):
     try:
         shutil.rmtree(extract_dir)
         os.remove(zip_path)
-        logging.info("Cleaned up successfully.")
+        logging.info("Cleaned up files successfully.")
     except Exception as e:
         logging.error(f"Error during cleanup: {e}")
 
 
-# Start the Flask application
+# Register the Blueprint for versioning
+app.register_blueprint(api_v1, url_prefix='/api/v1')
+
+# Run the Flask app
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5001)))

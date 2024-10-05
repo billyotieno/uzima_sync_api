@@ -48,6 +48,8 @@ class HealthDataProcessor:
         combined_df = pd.concat([workout_data, metrics_data], ignore_index=True)
         self.dataframes.append(combined_df)
 
+        return combined_df
+
 
     def flatten_workouts(self, data, user_id):
         """ Flatten the workout data from the JSON file """
