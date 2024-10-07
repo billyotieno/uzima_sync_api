@@ -14,3 +14,9 @@ __pycache__/
 # Ignore my .env file
 .env
 config.py
+
+# Ignore my virtual environment
+.venv
+
+# Ignore my ssl
+ssl/
