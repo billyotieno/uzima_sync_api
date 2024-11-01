@@ -100,8 +100,9 @@ Log into the Oracle APEX dashboard to view personalized metrics, challenges, and
 
 
 ```
+# Sample Username & Password
 Username: bonganibendile
-Password: 
+Password: welcome1234_
 ```
 
 ### Contributing
