@@ -85,7 +85,7 @@ UzimaSync uses a microservice architecture with Oracle APEX, Flask API, and SQL/
      flask run
      ```
 
-1. **Deploy Oracle APEX Application**
+3. **Deploy Oracle APEX Application**
    - Import the APEX application to your Oracle APEX instance.
    - Configure environment variables for database connection.
 
@@ -95,10 +95,11 @@ UzimaSync uses a microservice architecture with Oracle APEX, Flask API, and SQL/
 #### Dashboard Access
 Log into the Oracle APEX dashboard to view personalized metrics, challenges, and health data.
 
-[https://g1addbbc700f30e-boadw.adb.me-jeddah-1.oraclecloudapps.com/ords/r/uzimasync_wp/uzimasync/login](Link to Dashboard)
+[Link to UzimaSync Web Portal](https://g1addbbc700f30e-boadw.adb.me-jeddah-1.oraclecloudapps.com/ords/r/uzimasync_wp/uzimasync/login)
 
 ```
-
+Username: bonganibendile
+Password: 
 ```
 
 ### Contributing
