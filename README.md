@@ -105,6 +105,12 @@ Username: bonganibendile
 Password: welcome1234_
 ```
 
+#### Login Page
+![Login Page](images/uzima_login.png)
+
+#### Sign-Up Page
+![Sign Up Page](images/uzima_signup.png)
+
 ### Contributing
 Feel free to submit issues or pull requests to contribute to UzimaSync. For major changes, open an issue to discuss your approach.
 
