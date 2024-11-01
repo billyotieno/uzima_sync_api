@@ -91,6 +91,31 @@ UzimaSync uses a microservice architecture with Oracle APEX, Flask API, and SQL/
 
 ### Usage
 
+#### Setting up HealthAutoExport
+1. **Once you Register and Login go to API Key & Setup Page**
+   - Copy the API Key and save it in a secure location.
+  
+  ![API Key Image](images/api_key_page.png)
+
+2. **Set up HealthAutoExport**
+   - Download the HealthAutoExport app on your device. Link [Download HealthAutoExport App](https://apps.apple.com/us/app/health-auto-export-json-csv/id1115567069)
+   - Enter the API URL, API Key in the app auto-sync to start syncing health data.
+    - **API URL**: `http://uzimasync.app/api/v1/upload`
+    - **API Key**: `Your API Key`
+
+3. **Setup Metrics & Workouts**
+  
+  - Setup Metrics Automations
+    - Select the metrics you want to sync and set up the sync frequency.
+   ![HealthAutoExport Image](images/mobile_snapts/setup_metrics.png)
+
+- Setup Workouts Automations
+   - Select the workouts you want to sync and set up the sync frequency.
+   ![HealthAutoExport Image](images/mobile_snapts/setup_workouts.png)
+
+- **Sync Health Data**
+  - Once you have set up the metrics, the app will automatically sync health data to the Flask API.
+  - The Flask API will ingest the data into the Oracle Autonomous Database.
 
 #### Dashboard Access
 Log into the Oracle APEX dashboard to view personalized metrics, challenges, and health data.
