@@ -95,7 +95,7 @@ UzimaSync uses a microservice architecture with Oracle APEX, Flask API, and SQL/
 #### Dashboard Access
 Log into the Oracle APEX dashboard to view personalized metrics, challenges, and health data.
 
-[Login to UzimaSync](https://g1addbbc700f30e-boadw.adb.me-jeddah-1.oraclecloudapps.com/ords/r/uzimasync_wp/uzimasync/login)
+[Login to UzimaSync](https://g1addbbc700f30e-boadw.adb.me-jeddah-1.oraclecloudapps.com/ords/r/uzimasync_wp/uzimasync/login)  
 [Register to UzimaSync](https://g1addbbc700f30e-boadw.adb.me-jeddah-1.oraclecloudapps.com/ords/r/uzimasync_wp/uzimasync/register)
 
 
